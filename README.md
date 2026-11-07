@@ -28,3 +28,25 @@ Example:
 ```sh
 docker run -it -p 8080:5150 -e WORKER_KIND=Postgres -e CONNECTION_STRING="postgres://user:password@localhost/dbname" loco-job-admin
 ```
+## Container development
+
+Requires Docker with Compose v2.22 or newer, Bash, GNU coreutils, util-linux
+(`ss` and `flock`), and standard text tools. No host Rust installation is needed.
+
+```sh
+bash scripts/dev/environment.sh setup
+bash scripts/dev/environment.sh run
+bash scripts/dev/environment.sh stop
+bash scripts/dev/environment.sh teardown
+```
+
+Setup builds with Cargo.lock and saves a checkout-specific project name and
+loopback port in `.env`. Run prints the local URL, waits for the home page to
+respond successfully, and watches source, assets, and configuration for rebuilds.
+Stop terminates services. Teardown removes containers and network, preserving
+the data volume. The bundled SQLite sample seeds the volume only when missing;
+no external database, migrations, account secrets, or mail service is required.
+Keep `.env` and `.private/` local. An existing unrelated `.env` is preserved and
+reported as a conflict. A reserved port conflict fails startup; stop the process
+using that port before retrying. The existing production Dockerfile remains
+available separately.

@@ -3,3 +3,9 @@ dockerfile
 .dockerignore
 .git
 .gitignore
+.env
+.private
+.ai
+/*.json
+/scripts/*
+!/scripts/dev/

@@ -1,0 +1,33 @@
+name: ${DEV_PROJECT:?Run setup first}
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      LOCO_ENV: development
+      DATABASE_URL: sqlite:///data/sample.sqlite?mode=rwc
+    ports:
+      - "127.0.0.1:${DEV_PORT:?Run setup first}:5150"
+    volumes:
+      - app-data:/data
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:5150/]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    develop:
+      watch:
+        - action: rebuild
+          path: src
+        - action: rebuild
+          path: assets
+        - action: rebuild
+          path: config
+        - action: rebuild
+          path: Cargo.toml
+        - action: rebuild
+          path: Cargo.lock
+volumes:
+  app-data:
